@@ -86,3 +86,55 @@ def resize_mask(mask, dsize=None, fx=None, fy=None):
     resized_mask =  cv2.resize(expand_gbr_image, dsize=dsize, fx=fx, fy=fy)
     resized_mask = resized_mask.astype("bool")[:, :, 0]
     return resized_mask
+
+
+def scale_and_crop_mask(
+    mask, 
+    scale_ratio=1.0, 
+    mask_center_x=None, 
+    mask_center_y=None, 
+    crop_img_width=None, 
+    crop_img_heigt=None
+):
+    # mask = text_mask
+    # mask_center_x = 100
+    # mask_center_y = 100
+    # scale_ratio = 2.0
+    
+
+    mask_center_x = mask_center_x or mask.shape[1] // 2
+    mask_center_y = mask_center_y or mask.shape[0] // 2
+
+    crop_img_width = crop_img_width or mask.shape[1]
+    crop_img_heigt = crop_img_heigt or mask.shape[0]
+    crop_center_x = crop_img_width // 2
+    crop_center_y = crop_img_heigt // 2
+    crop_img = np.zeros((crop_img_heigt, crop_img_width), dtype="bool")
+    
+    if scale_ratio != 1.0:
+        resized_mask = resize_mask(mask, fx=scale_ratio, fy=scale_ratio)
+    else:
+        resized_mask = mask
+    
+    mask_width = resized_mask.shape[1]
+    mask_height = resized_mask.shape[0]
+    
+    left = mask_center_x - mask_width // 2
+    right = mask_center_x + mask_width // 2
+    top = mask_center_y - mask_height // 2
+    bottom = mask_center_y + mask_height // 2
+
+    clip_left = np.maximum(left, 0)
+    clip_right = np.minimum(right, crop_img_width)
+    clip_top = np.maximum(top, 0)
+    clip_bottom = np.minimum(crop_img_heigt, bottom)
+
+    zero_point = (
+        mask_height // 2 - mask_center_y,
+        mask_width // 2 - mask_center_x
+    )
+    crop_img[clip_top:clip_bottom, clip_left:clip_right ] = \
+        resized_mask[clip_top + zero_point[0]:clip_bottom + zero_point[0], clip_left + zero_point[1]:clip_right + zero_point[1]]
+
+
+    return crop_img
