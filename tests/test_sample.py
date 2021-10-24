@@ -1,4 +1,4 @@
-from base import VideoCallback, generate_video_looper
+from videoedit.core import VideoCallback, generate_video_looper
 import av
 import av.datasets
 import numpy as np
@@ -10,51 +10,6 @@ from PIL import Image, ImageDraw, ImageFont
 import platform
 from datetime import date
 
-def pil2cv(imgPIL):
-    # imgCV_RGB = np.array(imgPIL, dtype = np.uint8)
-    imgCV_BGR = np.array(imgPIL)[:, :, ::-1]
-    return imgCV_BGR
-
-def cv2pil(imgCV):
-    imgCV_RGB = imgCV[:, :, ::-1]
-    imgPIL = Image.fromarray(imgCV_RGB)
-    return imgPIL
-
-
-def cv2_putText(img, text, org, fontFace=None, fontScale=100, color=(255, 255, 255), pos="topleft"):
-    if fontFace is None:
-        pf = platform.system()
-        if pf == "Windows":
-            fontFace = "meiryo.ttc"
-        elif pf == "Darwin":
-            fontFace = "ipaexg.ttf"        
-        elif pf == "Linux":
-            fontFace = "NotoSansCJK-Regular.ttc"
-        else:
-            raise ValueError("not supported os.")
-    x, y = org
-    b, g, r = color
-    colorRGB = (r, g, b)
-    imgPIL = cv2pil(img)
-    draw = ImageDraw.Draw(imgPIL)
-    fontPIL = ImageFont.truetype(font = fontFace, size = fontScale)
-    w, h = draw.textsize(text, font = fontPIL)
-    if pos == "topleft":
-        x = x
-        y = y
-    elif pos == "center":
-        x = x - w // 2
-        y = y - h // 2
-    elif pos == "bottomleft":
-        x = x
-        y = y - h
-    else:
-        raise ValueError("not supported pos {}".format(pos))
-
-    # print(x, y)
-    draw.text(xy = (x,y), text = text, fill = colorRGB, font = fontPIL)
-    imgCV = pil2cv(imgPIL)
-    return imgCV
 
 class Stimulus1(VideoCallback):
     def __init__(self) -> None:
