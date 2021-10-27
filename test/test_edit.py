@@ -7,7 +7,7 @@ importlib.reload(edit)
 
 class TestEdit(unittest.TestCase):
     def test_generate_mask(self):
-        text_mask = edit.generate_mask(
+        text_mask = edit.generate_text_mask(
             img_height=1080,
             img_width=1920,
             text="aaa",
@@ -31,7 +31,7 @@ class TestEdit(unittest.TestCase):
     def test_scale_and_crop_mask(self):
         import importlib
         importlib.reload(edit)
-        text_mask = edit.generate_mask(
+        text_mask = edit.generate_text_mask(
             img_height=1080,
             img_width=1920,
             text="aaa",
