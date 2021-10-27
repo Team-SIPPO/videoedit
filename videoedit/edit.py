@@ -14,7 +14,7 @@ def _cv2pil(imgCV):
     imgPIL = Image.fromarray(imgCV_RGB)
     return imgPIL
 
-def get_default_font_face():
+def _get_default_font_face():
     pf = platform.system()
     if pf == "Windows":
         font_face = "meiryo.ttc"
@@ -26,10 +26,10 @@ def get_default_font_face():
         raise ValueError("not supported os.")
     return font_face
 
-def put_text(img, text, org, font_face=None, font_scale=100, color=(255, 255, 255), pos="topleft"):
+def put_text(img, text, text_pos, font_face=None, font_scale=100, color=(255, 255, 255), pos="topleft"):
     if font_face is None:
-        font_face = get_default_font_face()
-    x, y = org
+        font_face = _get_default_font_face()
+    x, y = text_pos
     b, g, r = color
     colorRGB = (r, g, b)
     imgPIL = _cv2pil(img)
@@ -54,7 +54,7 @@ def put_text(img, text, org, font_face=None, font_scale=100, color=(255, 255, 25
     return imgCV
 
 
-def generate_mask(img_width, img_height, text, org, font_face=None, font_scale=100, pos="topleft"):
+def generate_text_mask(img_width, img_height, text, text_pos, font_face=None, font_scale=100, pos="topleft"):
     color=(255, 255, 255)
     # select background color
     mean_color_intensity = np.round(np.mean(color))
@@ -66,7 +66,7 @@ def generate_mask(img_width, img_height, text, org, font_face=None, font_scale=1
     img = np.ones((img_height, img_width, 3)) * backgournd
     img = img.astype("uint8")
 
-    text_img = put_text(img, text, org, font_face, font_scale, color, pos)
+    text_img = put_text(img, text, text_pos, font_face, font_scale, color, pos)
     
     str_img = text_img == np.array(color)
     str_img = np.sum(str_img, axis=-1) == 3
