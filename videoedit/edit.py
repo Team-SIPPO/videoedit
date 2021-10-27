@@ -54,7 +54,8 @@ def put_text(img, text, org, font_face=None, font_scale=100, color=(255, 255, 25
     return imgCV
 
 
-def generate_mask(img_width, img_height, text, org, font_face=None, font_scale=100, color=(255, 255, 255), pos="topleft"):
+def generate_mask(img_width, img_height, text, org, font_face=None, font_scale=100, pos="topleft"):
+    color=(255, 255, 255)
     # select background color
     mean_color_intensity = np.round(np.mean(color))
     if mean_color_intensity > 128:
