@@ -14,7 +14,7 @@ def _cv2pil(imgCV):
     imgPIL = Image.fromarray(imgCV_RGB)
     return imgPIL
 
-def get_default_font_face():
+def _get_default_font_face():
     pf = platform.system()
     if pf == "Windows":
         font_face = "meiryo.ttc"
@@ -28,7 +28,7 @@ def get_default_font_face():
 
 def put_text(img, text, org, font_face=None, font_scale=100, color=(255, 255, 255), pos="topleft"):
     if font_face is None:
-        font_face = get_default_font_face()
+        font_face = _get_default_font_face()
     x, y = org
     b, g, r = color
     colorRGB = (r, g, b)
