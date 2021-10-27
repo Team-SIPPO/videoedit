@@ -68,7 +68,8 @@ def generate_text_mask(img_width, img_height, text, text_pos, font_face=None, fo
 
     text_img = put_text(img, text, text_pos, font_face, font_scale, color, pos)
     
-    str_img = text_img == np.array(color)
+    # str_img = text_img == np.array(color)
+    str_img = text_img > 0
     str_img = np.sum(str_img, axis=-1) == 3
     # str_img_idx = np.repeat(np.expand_dims(str_img, axis=-1), 3, axis=-1)
 
